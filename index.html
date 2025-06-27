@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>MSSC Examination Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet"/>
+<style>
+    body {
+        background: linear-gradient(to right, #f0f4ff, #ffffff);
+        color: #333;
+        font-family: 'Poppins', sans-serif;
+        background: #f5f8ff;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+    header {
+        background-color: #2e5aac;
+        color: white;
+        padding: 20px 0;
+        font-size: 28px;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    .container {
+        margin: 30px auto;
+        max-width: 900px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 30px;
+    }
+    .input-group {
+        margin-bottom: 20px;
+    }
+    input {
+        padding: 14px;
+        font-size: 16px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    button {
+        padding: 12px 24px;
+        font-size: 16px;
+        background-color: #2e5aac;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 10px;
+    }
+    button:hover {
+        background-color: #234a8b;
+    }
+    .result-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-top: 30px;
+        text-align: left;
+        transition: all 0.3s ease;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+    th {
+        background-color: #e4ecff;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .grade-box {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    .grade-A { background-color: #d4edda; color: #155724; }
+    .grade-B { background-color: #fff3cd; color: #856404; }
+    .grade-C { background-color: #d1ecf1; color: #0c5460; }
+    .grade-E { background-color: #f8d7da; color: #721c24; }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+<header>PSUB BISOHA EXAMINATION RESULT</header>
+<div class="container">
+    <div class="input-group" style="text-align: left; max-width: 700px; margin: 0 auto; font-size: 16px;">
+        <label for="rollNo">Roll Number</label>
+        <input id="rollNo" type="text" placeholder="Enter your Roll Number"/>
+        <label for="admissionNo">Admission Number</label>
+        <input id="admissionNo" type="text" placeholder="Enter your Admission Number"/>
+        <div style="text-align: center;">
+            <button onclick="findResult()">Check Result</button>
+            <button onclick="document.getElementById('rollNo').value=''; document.getElementById('admissionNo').value=''; document.getElementById('result').innerHTML='';">Clear</button>
+        </div>
+    </div>
+
+    <div id="loader" style="display:none; text-align:center; margin-top:20px;">
+        <div style="border: 6px solid #f3f3f3; border-top: 6px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: auto;"></div>
+        <p style="margin-top: 10px;">Loading...</p>
+    </div>
+
+    <div id="instructions" style="max-width: 500px; margin: 10px auto; text-align: left; font-size: 11px; background: #fff8e1; border: 1px solid #ffe082; padding: 10px; border-radius: 6px;">
+        <h3 style="margin-top: 0; color: #333;">Important Instructions:</h3>
+        <ul style="padding-left: 20px; line-height: 1.6;">
+            <li>Please ensure Roll Number and Admission Number are correct.</li>
+            <li>All fields are mandatory before checking the result.</li>
+            <li>This page is for informational purposes only.</li>
+            <li>Keep your credentials confidential.</li>
+            <li>Do not refresh the page while checking the result.</li>
+        </ul>
+    </div>
+    <div class="result-card" id="result"></div>
+</div>
+<script>
+    const studentData = [{"roll no":"1024","admission no":"1255","students name":"Ayush Singh Gaur","father name":"Mr. Harshvardhan Singh","mother name":"Mrs. Neelam Singh","dob":"09/08/2014","Hindi Marks":"69","English Marks":"67","Mathematics Marks":"70","Science Marks":"69","Social Science Marks":"68","Drawing Marks":"66","Hindi Practical":30,"English Practical":30,"Mathematics Practical":30,"Science Practical":30,"Social Science Practical":30,"Drawing Practical":30,"Hindi Total":99,"English Total":97,"Mathematics Total":100,"Science Total":99,"Social Science Total":98,"Drawing Total":96,"Hindi Grade":"A","English Grade":"A","Mathematics Grade":"A","Science Grade":"A","Social Science Grade":"A","Drawing Grade":"A","Total Marks":589,"Result":"Pass"}];
+
+    function findResult() {
+        const rollNo = document.getElementById("rollNo").value;
+        const admissionNo = document.getElementById("admissionNo").value;
+        const loader = document.getElementById("loader");
+        const resultDiv = document.getElementById("result");
+
+        resultDiv.innerHTML = "";
+        loader.style.display = "block";
+        document.getElementById("instructions").style.display = "none";
+
+        setTimeout(() => {
+            loader.style.display = "none";
+
+            const result = studentData.find(s => s['roll no'] === rollNo && s['admission no'] === admissionNo);
+
+            if (result) {
+                let html = `
+                    <h2>Candidate Details</h2><h3>${result["roll no"]}/${result["admission no"]} - ${result["students name"]}</h3>
+                    <p><strong>Father's Name:</strong> ${result["father name"]}</p>
+                    <p><strong>Mother's Name:</strong> ${result["mother name"]}</p>
+                    <p><strong>Date of Birth:</strong> ${result["dob"]}</p>
+                    <table>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Theory Marks (70)</th>
+                            <th>Practical (30)</th>
+                            <th>Total (100)</th>
+                            <th>Grade</th>
+                        </tr>`;
+                ["Hindi", "English", "Mathematics", "Science", "Social Science", "Drawing"].forEach(subject => {
+                    html += `
+                        <tr>
+                            <td>${subject}</td>
+                            <td>${result[subject + " Marks"]}</td>
+                            <td>${result[subject + " Practical"]}</td>
+                            <td>${result[subject + " Total"]}</td>
+                            <td><span class="grade-box grade-${result[subject + " Grade"]}">${result[subject + " Grade"]}</span></td>
+                        </tr>`;
+                });
+                html += `</table>
+                    <h3>Total Marks: ${result["Total Marks"]} / 600</h3>
+                    <h3>Result: <span style="color: white; padding: 6px 12px; border-radius: 6px; background-color: ${result["Result"] === "Pass" ? 'green' : 'red'};">${result["Result"]}</span></h3>
+                    <button onclick="window.print()">Print / Save as PDF</button>
+                    <p style="margin-top: 20px; font-size: 14px; color: #666; text-align: center;">
+                        <em>This is a computer-generated scorecard and cannot be used as an official document.</em>
+                    </p>`;
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.innerHTML = "<p style='color:red;'>Student not found. Please check Roll No and Admission No.</p>";
+            }
+        }, 2000);
+    }
+</script>
+
+<footer style="background-color:#2e5aac; color:white; padding:20px; font-size:14px; margin-top:40px; text-align:center;">
+    <p><em>Disclaimer:</em> This is a computer-generated result and does not require any signature. For official records, please contact your institution.</p>
+    <p>&copy; 2025 PSUB Board. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
